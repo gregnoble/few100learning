@@ -81,3 +81,35 @@ describe('functions', () => {
         });
     });
 });
+
+describe('lodash', () => {
+    it('supports memoization', () => {
+        function doSomeHardWork() {
+            console.log('Ding Hard Work Here!');
+            return 'Work Is Done!';
+        }
+
+        const memo = _.memoize(doSomeHardWork);
+
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+        expect(memo()).toBe('Work Is Done!');
+    });
+    it('currying', () => {
+        function makeElement(tag: string, content: string) {
+            return `<${tag}>${content}</${tag}>`;
+        }
+        const curriedTagMaker = _.curry(makeElement);
+        const h1Maker = curriedTagMaker('h1');
+        const pMaker = curriedTagMaker('p');
+
+        expect(h1Maker('Hello')).toBe('<h1>Hello</h1>');
+        expect(pMaker('see you tomorrow')).toBe('<p>see you tomorrow</p>');
+    });
+});
