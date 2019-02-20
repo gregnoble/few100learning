@@ -210,6 +210,86 @@ describe('array methods', () => {
                 { firstName: 'Orion', lastName: 'Noble', age: 1 },
                 { firstName: 'Theo', lastName: 'Pietrick', age: 7 }
             ]);
+
+            const peopleWhoAreCatPeopleLessThanFive = people.filter(p => {
+                return p.isACat && p.age < 5;
+            }).map(p => {
+                const cat: CatPeople = {
+                    firstName: p.firstName,
+                    lastName: p.lastName,
+                    age: p.age
+                }
+                return cat;
+            });
+
+            // we should get all people who are cats who are less than 5
+            expect(peopleWhoAreCatPeopleLessThanFive).toEqual([
+                { firstName: 'Orion', lastName: 'Noble', age: 1 }
+            ]);
         });
     });
+
+    describe('methods that produce a single value (scalar)', () => {
+        it('has methods to check the membership of an array', () => {
+            expect(numbers.some(n => n > 8)).toBe(true);
+            expect(numbers.every(n => n < 10)).toBe(true);
+        });
+        it('has reduce', () => {
+            expect(numbers.reduce((p, c) => p + c)).toBe(45);
+            expect(numbers.reduce((p, c) => { console.log({ p, c }); return p + c; }, 100)).toBe(145);
+        });
+        it('ok one more example', () => {
+
+            const friends = ['sean', 'billy', 'stacey', 'david'];
+
+            interface Answer {
+                list: string;
+                numberOfFriends: number;
+            }
+            const initialState: Answer = {
+                list: '',
+                numberOfFriends: 0
+            }
+            const answer = friends
+                .map(f => f.toUpperCase())
+                .reduce((state, next) => {
+                    return {
+                        list: state.list ? state.list + ' ' + next : next,
+                        numberOfFriends: state.numberOfFriends + 1
+                    }
+                }, initialState)
+
+            expect(answer.list).toBe('SEAN BILLY STACEY DAVID');
+            expect(answer.numberOfFriends).toBe(4);
+        });
+        it('final example and I mean it', () => {
+
+            interface Action {
+                type: string;
+            }
+
+            const stuffThatHappened: Action[] = [
+                { type: 'ADDED' },
+                { type: 'ADDED' },
+                { type: 'SUBTRACTED' },
+                { type: 'ADDED' },
+            ];
+
+            const initialState = 0;
+
+            const answer = stuffThatHappened.reduce((state, next) => {
+                switch (next.type) {
+                    case 'ADDED': {
+                        return state + 1;
+                    }
+                    case 'SUBTRACTED': {
+                        return state - 1;
+                    }
+                }
+            }, initialState)
+
+            expect(answer).toBe(2);
+        });
+    });
+
 });
